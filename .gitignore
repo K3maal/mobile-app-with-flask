@@ -1,0 +1,12 @@
+# Database file - contains real data, don't push this
+data.db
+
+# Virtual environment - very large folder, not needed on GitHub
+deel/
+
+# Python cache files - not needed
+__pycache__/
+*.pyc
+
+# Claude instructions - not needed on GitHub
+CLAUDE.md
