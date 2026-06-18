@@ -43,8 +43,20 @@ def create_project():
     project_id = cursor.lastrowid 
 
     conn.execute(
-        "INSERT INTO work_processes (project_id) VALUES (?)",
-        (project_id,)
+        """INSERT INTO work_processes
+        (project_id, b1_k1_w1, b1_k1_w2, b1_k1_w3, b1_k1_w4, b1_k1_w5, b1_k2_w1, b1_k2_w2, b1_k2_w3)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (
+            project_id,
+            1 if data.get("b1_k1_w1") else 0,
+            1 if data.get("b1_k1_w2") else 0,
+            1 if data.get("b1_k1_w3") else 0,
+            1 if data.get("b1_k1_w4") else 0,
+            1 if data.get("b1_k1_w5") else 0,
+            1 if data.get("b1_k2_w1") else 0,
+            1 if data.get("b1_k2_w2") else 0,
+            1 if data.get("b1_k2_w3") else 0,
+        )
     )
 
     conn.commit()
@@ -76,6 +88,18 @@ def get_project(project_id):
         "project": dict(project),
         "work_processes": dict(work) if work else {}
     }), 200
+
+
+@student_bp.route("/api/student/projects/<int:project_id>/complete", methods=["PUT"])
+def complete_project(project_id):
+    conn = get_db()
+    conn.execute(
+        "UPDATE projects SET status = 'Completed' WHERE id = ?",
+        (project_id,)
+    )
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Project marked as completed"}), 200
 
 
 @student_bp.route("/api/student/projects/<int:project_id>", methods=["PUT"])

@@ -7,6 +7,7 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def init_db():
     conn = get_db()
 
@@ -54,6 +55,16 @@ def init_db():
             FOREIGN KEY (project_id) REFERENCES projects(id)
         )
     """)
+
+    # add startup columns if they don't exist yet
+    try:
+        conn.execute("ALTER TABLE projects ADD COLUMN startup_goedgekeurd INTEGER DEFAULT NULL")
+    except:
+        pass
+    try:
+        conn.execute("ALTER TABLE projects ADD COLUMN startup_reden TEXT")
+    except:
+        pass
 
     conn.commit()
     conn.close()
